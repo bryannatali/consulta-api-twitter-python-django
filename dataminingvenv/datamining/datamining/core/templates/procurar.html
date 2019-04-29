@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block primary %}
+<div class="alert alert-primary" role="alert">
+	Foram encontrados {{ quantity }} tweets com as tags sujeridas.
+</div>
+<hr>
+<br>
+	<select class="form-control col-sm-2 float-right mr-5" id="ordernator">
+		<option value="newest">Mais recente</option>
+		<option value="oldest">Mais antigo</option>
+	</select>
+<br>
+<br>
+<div class="container">
+	<div class="row" id="dad">
+
+		{% for tweet in tweets %}
+		<div class="card" style="width: 35rem; margin-top: 5px; margin-bottom: 5px; margin-right: 10px" id="{{ tweet.id }}">
+			<div class="card-body">
+				<img src="{{ tweet.user.profile_image_url}}" style="border-radius: 50%; margin-right: 7px;">
+				<a class="card-title" href="https://twitter.com/{{ tweet.user.screen_name }}" target="_blank">{{ tweet.user.name }}</a> @{{ tweet.user.screen_name }}
+				<p class="card-text" style="margin-top: 15px">{{ tweet.text }}</p>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
