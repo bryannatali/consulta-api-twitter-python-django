@@ -6,15 +6,11 @@
 </div>
 <hr>
 <br>
-	<select class="form-control col-sm-2 float-right mr-5" id="ordernator">
-		<option value="newest">Mais recente</option>
-		<option value="oldest">Mais antigo</option>
-	</select>
+	
 <br>
 <br>
 <div class="container">
 	<div class="row" id="dad">
-
 		{% for tweet in tweets %}
 		<div class="card" style="width: 35rem; margin-top: 5px; margin-bottom: 5px; margin-right: 10px" id="{{ tweet.id }}">
 			<div class="card-body">

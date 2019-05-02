@@ -6,7 +6,9 @@
   <h1 class="h3 mb-3 font-weight-normal">Informe o que deseja procurar</h1>
     <label for="search" class="sr-only">Tags</label>
     <input class="form-control"  placeholder="Tags" autofocus {{ form.search }}
+    <select class="form-control mr-5" id="ordernator" {{ form.field}}
+    </select>
   <button class="btn btn-lg btn-primary btn-block" type="submit" id="btnsearch">Procurar</button>
-  <p class="mt-5 mb-3 text-muted">&copy; 2019</p>
+  <p class="mt-5 mb-3 text-muted">&copy; Bryan 2019</p>
 </form>
 {% endblock %}

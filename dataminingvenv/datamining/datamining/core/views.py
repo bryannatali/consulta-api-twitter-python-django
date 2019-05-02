@@ -18,6 +18,7 @@ def procurar(request):
 		form = SearchForm(request.POST or None)
 		if form.is_valid():
 			search = form.cleaned_data['search']
+			field = form.cleaned_data['field']
 
 			client = TwitterUtil()
 
@@ -28,11 +29,13 @@ def procurar(request):
 			for tweet in range(0, len(tweets)):
 				aux = tweets[tweet]['user']['location']
 
-				if (re.search('brasil', aux, re.IGNORECASE) ):
+				if (re.search('brasil', aux, re.IGNORECASE) or re.search('Santa Catarina', aux, re.IGNORECASE)):
 					list_tweet.append(tweets[tweet])
 					
 			quantity = len(list_tweet)
 
+			if field == "oldest":
+				list_tweet = sorted(list_tweet, key = lambda k: k['id'], reverse = True)
 			return render(request, 'procurar.html', {'tweets': list_tweet, 'quantity': quantity} )
 	else:
 		form = SearchForm()
