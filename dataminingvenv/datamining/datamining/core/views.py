@@ -1,12 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.utils import timezone
 from requests_oauthlib import OAuth1Session
 import requests.utils
 import json
 from .api_search import TwitterUtil
 from .forms import SearchForm
-from datamining.core.models import SentimentAnalysis
+from .sentiment_analysis import SentimentAnalysis
+from .models import SentimentAnalysisModel
+from .models import TweetSearch
 import re
+from operator import itemgetter
+import datetime
+
+
 
 def index(request):
 	form = SearchForm()
@@ -26,16 +33,30 @@ def procurar(request):
 
 			list_tweet = []
 
+			analysis = SentimentAnalysis()
+
 			for tweet in range(0, len(tweets)):
 				aux = tweets[tweet]['user']['location']
 
 				if (re.search('brasil', aux, re.IGNORECASE) or re.search('Santa Catarina', aux, re.IGNORECASE)):
 					list_tweet.append(tweets[tweet])
-					
+					analysis.score_sentiment(tweets[tweet]['text'])
+
 			quantity = len(list_tweet)
 
+			tweet_search = TweetSearch(time_was_made = datetime.datetime.now(), count_tweets = quantity)
+			tweet_search.save()
+		
+			client_analysis = SentimentAnalysisModel(positive = analysis.count_positive, default = analysis.count_default, negative = analysis.count_negative, tweet_search = tweet_search)
+			client_analysis.save()
+
 			if field == "oldest":
-				list_tweet = sorted(list_tweet, key = lambda k: k['id'], reverse = True)
+				list_tweet = sorted(list_tweet, key=lambda k: (len(k["id_str"]), int(k["id_str"][-2:])))
+			if field == "morert":
+				list_tweet = sorted(list_tweet, key = itemgetter('retweet_count'))
+			if field == "minusrt":
+				list_tweet = sorted(list_tweet, key = itemgetter('retweet_count'), reverse = True)
+
 			return render(request, 'procurar.html', {'tweets': list_tweet, 'quantity': quantity} )
 	else:
 		form = SearchForm()
@@ -44,5 +65,19 @@ def procurar(request):
 
 
 def graficos(request):
+	sentiments_analysis = SentimentAnalysisModel.objects.last()
 
-	return render(request, 'graficos.html')
+	#positive = sum([int(s.positive) for s in sentiments_analysis])
+	#default = sum([int(s.default) for s in sentiments_analysis])
+	#negative = sum([int(s.negative) for s in sentiments_analysis])
+
+	positive = sentiments_analysis.positive 
+	default = sentiments_analysis.default
+	negative = sentiments_analysis.negative
+
+	context = {
+		'positive': json.dumps(positive),
+		'default': json.dumps(default),
+		'negative': json.dumps(negative)
+	}
+	return render(request, 'graficos.html', {'context': context})

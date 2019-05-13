@@ -2,6 +2,6 @@ from django import forms
 
 class SearchForm(forms.Form):
 	search = forms.CharField(label='Your name', max_length=100)
-	choices = (('oldest', 'Mais Antigo'),('newest', 'Mais Novo'),)
+	choices = (('newest', 'Mais Novo'),('oldest', 'Mais Antigo'),('morert', 'Mais Retwetado'), ('minusrt', 'Menos Retwetado'))
 	field = forms.ChoiceField(choices=choices)
     

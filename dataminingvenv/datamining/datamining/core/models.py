@@ -4,28 +4,24 @@ import tweepy
 import json
 from requests_oauthlib import OAuth1Session
 from operator import itemgetter
+from django.contrib.contenttypes.fields import GenericRelation
 
-class SentimentAnalysis(object):
-    sentilexpt = open(r"C:\Users\Admin\dev\SentiLex-lem-PT02.txt",'r')
+class TweetSearch(models.Model):
+	time_was_made = models.DateTimeField('time made')
+	count_tweets = models.IntegerField()
 
-    dic_palavra_polaridade = {}
+	def set_search(self, time, count):
+		self.time_was_made = time
+		self.count_tweets = count
 
-    for i in sentilexpt.readlines():
-        pos_ponto = i.find('.')
-        palavra = (i[:pos_ponto])
-        pol_pos = i.find('POL')
-        polaridade = (i[pol_pos+4:pol_pos+6]).replace(';','')
-        dic_palavra_polaridade[palavra] = polaridade
+class SentimentAnalysisModel(models.Model):
+    positive = models.IntegerField()
+    default = models.IntegerField()
+    negative = models.IntegerField()
+    tweet_search = models.ForeignKey(TweetSearch, related_name='sentiments', on_delete=models.CASCADE)
 
-    def Score_sentimento(frase):
-        frase = frase.lower()
-        l_sentimento = []
-        for p in frase.split():
-            l_sentimento.append(int(dic_palavra_polaridade.get(p, 0)))
-        score = sum(l_sentimento)
-        if score > 0:
-            return 'Positivo, Score:{}'.format(score)
-        elif score == 0:
-            return 'Neutro, Score:{}'.format(score)
-        else:
-            return 'Negativo, Score:{}'.format(score)
+
+
+#s = SentimentAnalysisModel.objects.last()
+#t = TweetSearch.objects.last()
+#ts = t.sentiments.all()
