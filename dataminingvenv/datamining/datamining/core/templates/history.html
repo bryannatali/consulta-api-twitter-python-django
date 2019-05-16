@@ -1,34 +1,22 @@
 {% extends 'base.html' %}
 
-{% block import_scripts %}
-	<script>
-		$('.btn').click(function(){
-			console.log($(this).attr('id'))
-			var date = $(this).attr('id')
-
-			$.ajax({
-				url: '{% url "history_ajax" %}',
-				data: {
-					'date': date
-				},
-				dataType: 'json',
-				success: function(data){
-					console.log(data);
-				}
-			})
-		});		
-	</script>
-{% endblock %}
-
 {% block primary %}
-{% for t in table %}
-
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">{{ t.time_was_made }}</h5>
-    <p class="card-text">Número de Tweets: {{ t.count_tweets }}</p>
-    <button id="{{ t.time_was_made }}" class="btn btn-primary">Redirecionar</a>
-  </div>
+<div class="alert alert-primary" role="alert">
+	Histórico de buscas na API
 </div>
+<div class="container">
+	<div class="row">
+		{% for t in table %}
+		<div class="card" style="width: 18rem; margin-top: 5px; margin-bottom: 5px; margin-right: 10px; margin-left: 50px;">
+	  		<div class="card-body">
+    			<h5 class="card-title">{{ t.time_was_made }}</h5>
+    			<p class="card-text">Número de Tweets: {{ t.count_tweets }}</p>
+    			<div class="alert alert-primary" role="alert">
+ 				 A tag utilizada para a pesquisa foi: '{{ t.tags }}'
+				</div>
+  			</div>
+		</div>
 {% endfor %}
+	</div>
+</div>
 {% endblock %}

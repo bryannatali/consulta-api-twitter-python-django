@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.utils import timezone
@@ -43,7 +43,7 @@ def procurar(request):
 
 			quantity = len(list_tweet)
 
-			tweet_search = TweetSearch(time_was_made = datetime.datetime.now(), count_tweets = quantity)
+			tweet_search = TweetSearch(time_was_made = datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), count_tweets = quantity, tags = search)
 			tweet_search.save()
 		
 			client_analysis = SentimentAnalysisModel(positive = analysis.count_positive, default = analysis.count_default, negative = analysis.count_negative, tweet_search = tweet_search)
@@ -79,19 +79,8 @@ def graficos(request):
 		'default': json.dumps(default),
 		'negative': json.dumps(negative)
 	}
-	return render(request, 'graficos.html', {'context': context})
+	return render(request, 'graficos.html', context)
 
 def history(request):
 	table = TweetSearch.objects.all()
 	return render(request, 'history.html', {'table': table})
-
-def history_ajax(request):
-	date = request.GET.get('date')
-
-	ts = TweetSearch.objects.get(time_was_made = date)
-
-
-	data = {'date': date}
-	#senti = {'sentiment': sentiments_analysis}
-
-	return JsonResponse(data)

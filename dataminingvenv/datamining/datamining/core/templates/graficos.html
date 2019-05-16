@@ -6,14 +6,14 @@
 <div class="alert alert-primary" role="alert">
   Gráfico relacionado à última pesquisa na base de dados.
 </div>
-<canvas id="sentimentsChart" width="300" height="300"></canvas>
+<canvas id="sentimentsChart"></canvas>
 {% endblock %}
 {% block import_scripts %}
 <script type="text/javascript">
 	var ctx = document.getElementById("sentimentsChart");
-    var positive = JSON.parse('{{ context.positive|safe }}');
-    var defaults = JSON.parse('{{ context.default|safe }}');
-    var negative = JSON.parse('{{ context.negative|safe }}');
+    var positive = JSON.parse('{{ positive|safe }}');
+    var defaults = JSON.parse('{{ default|safe }}');
+    var negative = JSON.parse('{{ negative|safe }}');
     var productsChart = new Chart(ctx, {
     type: 'bar',
     data: {
