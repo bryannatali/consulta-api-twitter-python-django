@@ -6,7 +6,7 @@ class SentimentAnalysis(object):
 
 
     def __init__(self):
-        sentilexpt = open(r"C:\Users\Admin\dev\SentiLex-lem-PT02.txt",'r')
+        sentilexpt = open(r"C:\Users\Admin\dev\dataminingvenv\datamining\datamining\core\resources\SentiLex-lem-PT02.txt",'r')
 
         for i in sentilexpt.readlines():
             after_dot = i.find('.')

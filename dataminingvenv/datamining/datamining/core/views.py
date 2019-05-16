@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.utils import timezone
 from requests_oauthlib import OAuth1Session
 import requests.utils
@@ -12,8 +13,6 @@ from .models import TweetSearch
 import re
 from operator import itemgetter
 import datetime
-
-
 
 def index(request):
 	form = SearchForm()
@@ -81,3 +80,18 @@ def graficos(request):
 		'negative': json.dumps(negative)
 	}
 	return render(request, 'graficos.html', {'context': context})
+
+def history(request):
+	table = TweetSearch.objects.all()
+	return render(request, 'history.html', {'table': table})
+
+def history_ajax(request):
+	date = request.GET.get('date')
+
+	ts = TweetSearch.objects.get(time_was_made = date)
+
+
+	data = {'date': date}
+	#senti = {'sentiment': sentiments_analysis}
+
+	return JsonResponse(data)
