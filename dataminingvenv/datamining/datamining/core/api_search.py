@@ -1,6 +1,7 @@
 import tweepy
 import json
 from requests_oauthlib import OAuth1Session
+import urllib.parse
 
 MAX_TWEETS = 100
 BASE_URL = "https://api.twitter.com/1.1/search/tweets.json"
@@ -18,8 +19,12 @@ class TwitterUtil(object):
                                      self.access_token_secret)
 
     def get_tweets(self, keyword, n=15, max_id=None):
+        list_keyword = keyword.split()
+        for k in list_keyword:
+            if k.isalpha()==False:
+                return False
         if n > 0:
-            url = BASE_URL + ("?q=%s&count=%d" % (keyword, n))
+            url = BASE_URL + ("?q=%s&count=%d" % (urllib.parse.quote(keyword, safe=''), n))
             if max_id is not None:
                 url = url + "&max_id=%d" % (max_id)
             response = self.session.get(url)

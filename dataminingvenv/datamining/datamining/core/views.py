@@ -19,7 +19,6 @@ def index(request):
 	return render(request, 'index.html', {'form': form})
 
 def procurar(request):
-
 	if request.method == 'POST':
 		form = SearchForm(request.POST or None)
 		if form.is_valid():
@@ -28,6 +27,8 @@ def procurar(request):
 
 			client = TwitterUtil()
 
+			if not client.get_tweets("ifsc "+ search, 1000):
+				return redirect(index_error)
 			tweets = client.get_tweets("ifsc "+ search, 1000)
 
 			list_tweet = []
@@ -43,9 +44,11 @@ def procurar(request):
 
 			quantity = len(list_tweet)
 
-			tweet_search = TweetSearch(time_was_made = datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), count_tweets = quantity, tags = search)
+			tweet_search = TweetSearch(time_was_made = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), count_tweets = quantity, tags = search)
 			tweet_search.save()
-		
+			
+			print("Atual search date: "+ datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
 			client_analysis = SentimentAnalysisModel(positive = analysis.count_positive, default = analysis.count_default, negative = analysis.count_negative, tweet_search = tweet_search)
 			client_analysis.save()
 
@@ -56,12 +59,10 @@ def procurar(request):
 			if field == "minusrt":
 				list_tweet = sorted(list_tweet, key = itemgetter('retweet_count'), reverse = True)
 
-			return render(request, 'procurar.html', {'tweets': list_tweet, 'quantity': quantity} )
+			return render(request, 'procurar.html', {'tweets': list_tweet, 'quantity': quantity, 'tags': search} )
 	else:
 		form = SearchForm()
 		return render(request, 'index.html', {'form': form})
-	
-
 
 def graficos(request):
 	sentiments_analysis = SentimentAnalysisModel.objects.last()
@@ -84,3 +85,33 @@ def graficos(request):
 def history(request):
 	table = TweetSearch.objects.all()
 	return render(request, 'history.html', {'table': table})
+
+def history_ajax(request):
+	date = request.GET.get('date')
+	print(date)
+	tweet_search = TweetSearch.objects.get(time_was_made = date)
+
+	ts = tweet_search.sentiments.all()
+
+	for s in ts:
+		p = s.positive
+		d = s.default
+		n = s.negative
+
+	context = {
+		'positive': json.dumps(p),
+		'default': json.dumps(d),
+		'negative': json.dumps(n)
+	}
+
+	request.session['context'] = context
+
+	data = {'date': date}
+
+	print(request.session['context'])
+
+	return JsonResponse(data)
+
+def index_error(request):
+	form = SearchForm()
+	return render(request, 'index.html', {'erro': 'Tag inválida! Tente novamente', 'form': form})

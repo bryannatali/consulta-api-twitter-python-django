@@ -1,5 +1,23 @@
 {% extends 'base.html' %}
 
+{% block import_scripts %}
+	<script>
+		$('.btn').click(function(){
+			var date = $(this).attr('id')
+			$.ajax({
+				url: '{% url "history_ajax" %}',
+				data: {
+					'date': date
+				},
+				dataType: 'json',
+				success: function(data){
+					console.log(data);
+				}
+			})
+		});		
+	</script>
+{% endblock %}
+
 {% block primary %}
 <div class="alert alert-primary" role="alert">
 	Histórico de buscas na API
@@ -14,6 +32,7 @@
     			<div class="alert alert-primary" role="alert">
  				 A tag utilizada para a pesquisa foi: '{{ t.tags }}'
 				</div>
+				<button id="{{ t.time_was_made|date:'Y-m-d H:i:s' }}" class="btn btn-primary">Redirecionar</a></button>
   			</div>
 		</div>
 {% endfor %}

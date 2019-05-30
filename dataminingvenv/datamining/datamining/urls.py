@@ -25,4 +25,6 @@ urlpatterns = [
     path('procurar', views.procurar, name='procurar'),
     path('graficos', views.graficos, name='graficos'),
     path('history', views.history, name='history'),
+    path('history_ajax', views.history_ajax, name='history_ajax'),
+    path('index_error', views.index_error, name='index_error'),
 ]

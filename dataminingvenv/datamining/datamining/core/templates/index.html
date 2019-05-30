@@ -3,6 +3,13 @@
 {% block primary %}
 <form class="text-center form-signin" action="{% url 'procurar' %}" style="margin-top: 130px" method="POST">  {% csrf_token %}
   <h1 class="h3 mb-3 font-weight-normal">Informe o que deseja procurar</h1>
+	{% block import_scripts %}
+		{% if erro %}
+			<script type="text/javascript">
+				alert('{{ erro }}');
+			</script>
+		{% endif %}
+	{% endblock %}
     <label for="search" class="sr-only">Tags</label>
     <input class="form-control"  placeholder="Tags" autofocus {{ form.search }}
     <select class="form-control mr-5" id="ordernator" {{ form.field}}
