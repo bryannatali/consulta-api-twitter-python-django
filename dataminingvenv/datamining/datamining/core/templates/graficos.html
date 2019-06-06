@@ -11,6 +11,7 @@
 {% block import_scripts %}
 <script type="text/javascript">
 	var ctx = document.getElementById("sentimentsChart");
+  console.log(ctx);
     var positive = JSON.parse('{{ positive|safe }}');
     var defaults = JSON.parse('{{ default|safe }}');
     var negative = JSON.parse('{{ negative|safe }}');

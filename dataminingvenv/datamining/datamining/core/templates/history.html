@@ -10,11 +10,47 @@
 					'date': date
 				},
 				dataType: 'json',
-				success: function(data){
-					console.log(data);
+				success: function(context){
+					$('#modalGrafico').modal('show');
+					$('#modalGrafico').on('shown.bs.modal', function () {
+							var ctx = $('#grafico')[0];
+					    var positive = JSON.parse(context.positive);
+					    var defaults = JSON.parse(context.default);
+					    var negative = JSON.parse(context.negative);
+					    var productsChart = new Chart(ctx, {
+					    type: 'bar',
+					    data: {
+					        labels: ['Positivo', 'Neutro', 'Negativo'],
+					        datasets: [{
+					            label: 'Sentimentos',
+					            data: [positive, defaults, negative],
+					            backgroundColor: [
+					                'rgba(255, 99, 132, 0.2)',
+					                'rgba(54, 162, 235, 0.2)',
+					                'rgba(255, 206, 86, 0.2)',
+					            ],
+					            borderColor: [
+					                'rgba(255,99,132,1)',
+					                'rgba(54, 162, 235, 1)',
+					                'rgba(255, 206, 86, 1)',
+					            ],
+					            borderWidth: 1
+					        }]
+					    },
+					    options: {
+					        scales: {
+					            yAxes: [{
+					                ticks: {
+					                    beginAtZero:true
+					                }
+					            }]
+					        }
+					    }
+					});
+				});
 				}
-			})
-		});		
+			});
+		});
 	</script>
 {% endblock %}
 
@@ -32,10 +68,30 @@
     			<div class="alert alert-primary" role="alert">
  				 A tag utilizada para a pesquisa foi: '{{ t.tags }}'
 				</div>
-				<button id="{{ t.time_was_made|date:'Y-m-d H:i:s' }}" class="btn btn-primary">Redirecionar</a></button>
+				<button id="{{ t.time_was_made|date:'Y-m-d H:i:s' }}" class="btn btn-primary">Vizualizar gráfico</button>
   			</div>
 		</div>
 {% endfor %}
 	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalGrafico" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Gráfico</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+				<canvas id="grafico"> </canvas>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

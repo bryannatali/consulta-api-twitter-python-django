@@ -46,7 +46,7 @@ def procurar(request):
 
 			tweet_search = TweetSearch(time_was_made = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), count_tweets = quantity, tags = search)
 			tweet_search.save()
-			
+
 			print("Atual search date: "+ datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 			client_analysis = SentimentAnalysisModel(positive = analysis.count_positive, default = analysis.count_default, negative = analysis.count_negative, tweet_search = tweet_search)
@@ -71,7 +71,7 @@ def graficos(request):
 	#default = sum([int(s.default) for s in sentiments_analysis])
 	#negative = sum([int(s.negative) for s in sentiments_analysis])
 
-	positive = sentiments_analysis.positive 
+	positive = sentiments_analysis.positive
 	default = sentiments_analysis.default
 	negative = sentiments_analysis.negative
 
@@ -110,7 +110,7 @@ def history_ajax(request):
 
 	print(request.session['context'])
 
-	return JsonResponse(data)
+	return JsonResponse(context)
 
 def index_error(request):
 	form = SearchForm()
