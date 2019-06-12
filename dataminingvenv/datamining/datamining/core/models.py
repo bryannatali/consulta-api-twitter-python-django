@@ -1,9 +1,7 @@
 from django.db import models
 from django import forms
-import tweepy
 import json
 from requests_oauthlib import OAuth1Session
-from operator import itemgetter
 from django.contrib.contenttypes.fields import GenericRelation
 
 class TweetSearch(models.Model):
