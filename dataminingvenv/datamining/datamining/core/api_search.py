@@ -7,10 +7,10 @@ MAX_TWEETS = 100
 BASE_URL = "https://api.twitter.com/1.1/search/tweets.json"
 
 class TwitterUtil(object):
-    consumer_key = "afIYOFpeqAYyiYan23HGNd4b8"
-    consumer_secret = "ag86JE2RKzCY7seLrvwvIRPbnRbIWJaqa8N0MxaJLLtG3GmtsE"
-    access_token = "3786972143-BGenQrHiLZJ18Ko8LxwIIwLkLJsRmCBCtsw5i2i"
-    access_token_secret = "aKJQSkXYp0vYcx2MgxGdD5743cLo9vsxmXXFTqplzzuwq"
+    consumer_key = "YOUR COSUMER KEY"
+    consumer_secret = "YOUR CONSUMER SECRET"
+    access_token = "YOUR ACCESS TOKEN"
+    access_token_secret = "YOUR ACCESS TOKEN SECRET"
 
     def __init__(self):
         self.session = OAuth1Session(self.consumer_key,
